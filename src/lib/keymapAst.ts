@@ -4,7 +4,7 @@ const whitespace = A.many(A.whitespace);
 
 const keyword = A.sequenceOf([
 	A.choice([A.letter, A.digit, A.str('_')]),
-	A.many(A.choice([A.letter, A.digit, A.str('_'), A.str('-')]))
+	A.many(A.choice([A.letter, A.digit, A.str('_'), A.str('-'), A.str('('), A.str(')')]))
 ]).map((r) => r.flat().join(''));
 const layerName = keyword;
 const key = keyword;

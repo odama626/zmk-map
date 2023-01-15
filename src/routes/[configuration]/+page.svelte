@@ -107,6 +107,7 @@
 		display: flex;
 		gap: 1rem;
 		align-items: center;
+		overflow: hidden;
 	}
 
 	.layer {

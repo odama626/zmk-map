@@ -52,6 +52,7 @@ export const keyLookup = {
   DOT: '.',
   
   BSLH: '\\',
+  BACKSLASH: '\\',
   FSLH: '/',
 
   SEMI: ';',
