@@ -66,11 +66,16 @@ export const keyLookup = {
   LSHIFT: '⇧',
   LSHFT: '⇧',
   RSHFT: '⇧',
+  MOD_RS: '⇧',
+  MOD_LS: '⇧',
   LCTRL: '^',
   RCTRL: '^',
+  MOD_RC: '^',
+  MOD_LC: '^',
   COMMA: ',',
   LGUI: '⌘',
   RGUI: '⌘',
+
 
   RET: '↵',
   RETURN: '↵',
@@ -78,6 +83,8 @@ export const keyLookup = {
 
   RALT: '⎇',
   LALT: '⎇',
+  MOD_LA: '⎇',
+  MOD_RA: '⎇',
   SPACE: '⎵',
 
   N0: '0',

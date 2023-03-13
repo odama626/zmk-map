@@ -4,10 +4,18 @@ const whitespace = A.many(A.whitespace);
 
 const keyword = A.sequenceOf([
 	A.choice([A.letter, A.digit, A.str('_')]),
-	A.many(A.choice([A.letter, A.digit, A.str('_'), A.str('-'), A.str('('), A.str(')')]))
+	A.many(A.choice([A.letter, A.digit, A.str('_'), A.str('-')]))
 ]).map((r) => r.flat().join(''));
 const layerName = keyword;
-const key = keyword;
+// const key = keyword;
+
+const modifier = A.recursiveParser(() =>
+	A.sequenceOf([keyword, A.str('('), key, A.str(')')]).map((result) =>
+		[`MOD_${result[0]}`, result[2]].flat()
+	)
+);
+
+const key = A.recursiveParser(() => A.choice([modifier, keyword]));
 
 const betweenQuotes = A.between(A.char('"'))(A.char('"'));
 
@@ -95,7 +103,9 @@ function arrayOf(parser) {
 	]).map((r) => r[2]);
 }
 
-const bindings = namedKeyValue(A.str('bindings'))(arrayOf(A.choice([kp, lt, mt, trans, bt, mo])));
+const keycode = A.choice([kp, lt, mt, trans, bt, mo]);
+
+const bindings = namedKeyValue(A.str('bindings'))(arrayOf(keycode));
 
 const commentBlock = A.sequenceOf([
 	whitespace,
@@ -112,13 +122,14 @@ const comment = A.sequenceOf([whitespace, A.str('//'), A.everyCharUntil(A.str('\
 const label = namedKeyValue(A.str('label'))(stringValue);
 const compatible = namedKeyValue(A.str('compatible'))(stringValue);
 
-const layerDefinition =
-	 block(A.many(A.choice([commentBlock, comment, bindings, label])).map((r) => r.flat())).map((r) => ({
-		type: 'layerDefinition',
-		name: r.name,
-		value: Object.fromEntries(r.value.map((node) => [node.type, node.value])),
-		raw: r
-	}));
+const layerDefinition = block(
+	A.many(A.choice([commentBlock, comment, bindings, label])).map((r) => r.flat())
+).map((r) => ({
+	type: 'layerDefinition',
+	name: r.name,
+	value: Object.fromEntries(r.value.map((node) => [node.type, node.value])),
+	raw: r
+}));
 
 const define = A.sequenceOf([
 	whitespace,
@@ -160,10 +171,13 @@ const combo = A.sequenceOf([
 	keyword,
 	whitespace,
 	A.str('{'),
-	A.many(keyValue(arrayOf(A.choice([keyword, A.digits, lt, kp, bt, reservedWord])))).map(
-		(r) => r.reduce((a, b) => Object.assign(a, { [b.type]: b.value })),
-		{}
-	),
+	A.many(
+		A.choice([
+			comment,
+			commentBlock,
+			keyValue(arrayOf(A.choice([keyword, A.digits, keycode, reservedWord])))
+		])
+	).map((r) => r.reduce((a, b) => Object.assign(a, { [b.type]: b.value })), {}),
 	whitespace,
 	A.str('}'),
 	whitespace,
@@ -176,7 +190,7 @@ const combos = A.sequenceOf([
 	whitespace,
 	A.str('{'),
 	whitespace,
-	A.many(A.choice([compatible, combo])),
+	A.many(A.choice([compatible, combo, comment, commentBlock])),
 	whitespace,
 	A.str('}'),
 	whitespace,
@@ -219,7 +233,6 @@ export function parseKeyboardLayout(layout) {
 
 export function parse(input) {
 	const output = keymapFile.run(input);
-
 
 	return output;
 }

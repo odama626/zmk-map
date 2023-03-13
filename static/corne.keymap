@@ -12,7 +12,7 @@
 #define NAV 1
 #define SYM 2
 #define NUM 3
-// #define SYS 4
+#define NAV_EXT 4
 
 / {
   combos {
@@ -27,6 +27,11 @@
       key-positions = <25 26>;
       bindings = <&caps_word>;
     };
+    combo_nav_ext {
+      timeout-ms = <50>;
+      key-positions = <37 38>;
+      bindings = <&mo NAV_EXT>;
+    };
   };
 
   keymap {
@@ -36,7 +41,7 @@
       label = "base";
       bindings = <
         &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-        &kp LCTRL &mt LGUI A &mt LALT S &mt LSHIFT D &mt LCTRL F &kp G   &kp H &mt RCTRL J  &mt RSHFT K &mt RALT L &mt RGUI SEMI &kp SQT
+        &kp LCTRL &mt LGUI A &mt LALT S &mt LSHIFT D &mt LCTRL F &mt LS(LC(LA(LGUI))) G   &mt RS(RC(RA(RGUI))) H &mt RCTRL J  &mt RSHFT K &mt RALT L &mt RGUI SEMI &kp SQT
         &kp LSHFT &mt LSHFT Z &mt LCTRL X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &mt RCTRL DOT &mt RSHFT FSLH &kp ESC
                 &kp LGUI &lt NUM TAB &lt NAV SPACE    &lt SYM ENTER &kp BACKSPACE &kp RALT
       >;
@@ -45,30 +50,40 @@
       label = "nav";
 
       bindings = <
-        &trans  &trans  &trans  &trans  &trans  &trans     &trans  &kp LEFT_BRACE  &kp RIGHT_BRACE  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans
-        &trans  &kp BACKSPACE   &trans  &trans  &trans  &trans     &kp LEFT  &kp DOWN  &kp UP  &kp RIGHT  &trans  &trans
-        &trans  &trans  &trans  &trans  &trans  &trans     &trans  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LESS_THAN  &kp GREATER_THAN  &trans
-                                &trans  &trans  &trans     &trans  &trans  &trans
+        &trans  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5     &kp LEFT_BRACE  &kp RIGHT_BRACE  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans &trans
+        &trans  &mt LGUI N6 &mt LALT N7 &mt LSHIFT N8 &mt LCTRL N9  &mt LS(LC(LA(LGUI))) N0      &kp LEFT  &kp DOWN  &kp UP  &kp RIGHT  &trans  &trans
+        &trans  &trans  &trans  &trans  &trans  &kp DOT    &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp LESS_THAN  &kp GREATER_THAN &trans  &trans
+                                &trans  &trans  &trans     &trans  &kp DELETE  &trans
       >;
     };
     sym_layer {
       label = "sym";
       bindings = <
         &trans  &kp MINUS  &kp EQUAL  &kp ASTERISK  &kp AMPERSAND  &trans          &kp C_SLEEP  &trans  &kp C_PLAY_PAUSE  &kp C_VOL_UP  &kp C_MUTE  &trans
-        &trans &kp SINGLE_QUOTE  &kp CARET  &kp PERCENT  &kp DOLLAR  &kp PLUS          &trans  &trans  &trans &kp C_VOL_DN  &trans  &trans
-        &trans &mt LSHIFT GRAVE  &mt LCTRL HASH  &kp AT  &kp EXCLAMATION  &kp PIPE          &bt BT_CLR  &bt BT_NXT  &bt BT_PRV  &trans &trans  &trans
+        &trans &kp SINGLE_QUOTE  &kp CARET  &kp PERCENT  &kp DOLLAR  &trans          &trans  &mt RCTRL C_PREV  &mt RSHFT C_NEXT &mt RALT C_VOL_DN  &trans  &trans
+        &trans &mt LSHIFT GRAVE  &mt LCTRL HASH  &kp AT  &kp EXCLAMATION  &kp BACKSLASH          &bt BT_CLR  &bt BT_NXT  &bt BT_PRV  &trans &trans  &trans
                                 &trans  &trans  &trans          &trans  &trans  &trans
       >;
     };
     num_layer {
       label = "num";
       bindings = <
-        &trans  &trans  &trans  &trans  &trans  &trans          &trans  &kp KP_N7  &kp KP_N8  &kp KP_N9  &kp KP_PLUS  &trans
-        &trans  &trans  &trans  &trans  &trans  &trans          &trans  &kp KP_N4  &kp KP_N5  &kp KP_N6  &kp KP_MINUS  &trans
-        &trans  &trans  &trans  &trans  &trans  &trans          &kp KP_N0   &kp KP_N1  &kp KP_N2  &kp KP_N3  &trans  &trans
+        &trans  &kp F1  &kp F2  &kp F3  &kp F4  &kp F5          &trans  &kp N7  &kp N8  &kp N9  &kp PLUS  &trans
+        &trans  &mt LGUI F6  &mt LALT  F7  &mt LSHIFT  F8  &mt LCTRL F9  &mt LS(LC(LA(LGUI))) F10          &trans  &kp N4  &kp N5  &kp N6  &kp MINUS  &trans
+        &trans  &mt LSHIFT F11  &mt LCTRL F12  &kp F13  &kp F14  &kp F15          &kp N0   &kp N1  &kp N2  &kp N3  &trans  &trans
                                 &trans  &trans  &trans          &trans  &trans  &trans
-    >;
+      >;
      };
+    nav_ext_layer {
+      label = "nav ext";
+
+      bindings = <
+        &trans  &trans  &trans  &trans  &trans  &trans     &trans  &trans  &trans  &trans &trans  &trans
+        &trans  &trans  &trans  &trans  &trans  &trans     &kp HOME  &kp PAGE_DOWN  &kp PAGE_UP  &kp END &trans  &trans
+        &trans  &trans  &trans  &trans  &trans  &trans     &trans  &trans  &trans  &trans &trans  &trans
+                                &trans  &trans  &trans     &trans  &trans  &trans
+      >;
+    };
     //  sys_layer {
     //     bindings = <
     //     &trans  &trans  &trans  &trans  &trans  &trans          &kp C_SLEEP  &trans  &kp C_PLAY_PAUSE  &kp C_VOL_UP  &kp C_MUTE  &trans

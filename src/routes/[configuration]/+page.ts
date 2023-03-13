@@ -7,18 +7,18 @@ export const load = (async ({ params, fetch, route, url }) => {
 
 	console.dir({ keymapFile}, { depth: 10})
 	const config = keymapFile.result.find((r) => r.type === 'config');
-	const defines = keymapFile.result.filter((r) => r.type === 'define');
+	const defines = keymapFile.result?.filter((r) => r.type === 'define');
 
 
-	const layerDefinitions = config.keymap.filter((node) => node.type === 'layerDefinition');
+	const layerDefinitions = config.keymap?.filter((node) => node.type === 'layerDefinition') ??  [];
 	const rawCombos = config.combos?.filter((node) => node.type === 'combo') || [];
 	const keyboardLayout = parseKeyboardLayout(params.configuration).result;
 
-	const colorsNeeded = layerDefinitions.length + rawCombos.length;
+	const colorsNeeded = layerDefinitions?.length + rawCombos?.length;
 	const keyReferences = {};
 
 	const combos = rawCombos.map(({ value, ...combo }, i, arr) => {
-		const keys = value['key-positions'].map((k) => Number(k));
+		const keys = value['key-positions']?.map((k) => Number(k));
 		const color = getColorForPercentage(i / colorsNeeded);
 
 		keys.forEach((key) => {
@@ -40,6 +40,7 @@ export const load = (async ({ params, fetch, route, url }) => {
 	const layers = layerDefinitions.map((layer, i) => {
 		return {
 			...layer,
+			label: layer.value.label,
 			color: getColorForPercentage((i + rawCombos.length) / colorsNeeded)
 		};
 	});

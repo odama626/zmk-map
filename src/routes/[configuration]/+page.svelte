@@ -1,15 +1,10 @@
 <script lang="ts">
 	import Binding from '$lib/binding.svelte';
-	import { keyLookup } from '$lib/keyLookup';
-	import { parseKeyboardLayout } from '$lib/keymapAst';
-
+	
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
-	const keyboardLayoutInput = '3x6+3';
-
-	console.log({ data });
 
 	const { keyboardLayout, defines = [], layers = [], keyReferences = {}, combos = [] } = data;
 
@@ -64,7 +59,7 @@
 		</h2>
 		<div class="layer">
 			{#each layer.value.bindings as binding, keyIndex}
-				<Binding {binding} hidden={hideKeys[keyIndex]}>
+				<Binding {binding} index={keyIndex} hidden={hideKeys[keyIndex]}>
 					<div class="dots">
 						{#if keyReferences[`${layerIndex}.${keyIndex}`]}
 							{#each keyReferences[`${layerIndex}.${keyIndex}`] as reference}
